@@ -4,6 +4,14 @@
 
 Express middleware providing "on demand" caching that kicks in only when requests arrive simultaneously.
 
+## Install
+
+```
+npm install express-cache-on-demand
+```
+
+## Example
+
 ```javascript
 var expressCacheOnDemand = require('express-cache-on-demand')();
 
