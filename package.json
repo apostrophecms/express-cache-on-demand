@@ -1,0 +1,35 @@
+{
+  "name": "express-cache-on-demand",
+  "version": "0.1.0",
+  "description": "Express middleware providing on-demand caching in high traffic situations.",
+  "main": "index.js",
+  "scripts": {
+    "test": "(cd test; mocha test)"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/punkave/express-cache-on-demand"
+  },
+  "keywords": [
+    "express",
+    "cache",
+    "performance",
+    "cache",
+    "on",
+    "demand"
+  ],
+  "author": "P'unk Avenue LLC",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/punkave/express-cache-on-demand/issues"
+  },
+  "homepage": "https://github.com/punkave/express-cache-on-demand",
+  "dependencies": {
+    "cache-on-demand": "^0.2.0",
+    "lodash": "^2.4.1"
+  },
+  "devDependencies": {
+    "express": "^4.9.8",
+    "request": "^2.45.0"
+  }
+}
