@@ -1,4 +1,4 @@
-# cache-on-demand
+# express-cache-on-demand
 
 <a href="http://apostrophenow.org/"><img src="https://raw.githubusercontent.com/punkave/express-cache-on-demand/master/logos/logo-box-madefor.png" align="right" /></a>
 
@@ -69,9 +69,13 @@ function hasher(req) {
 }
 ```
 
+## Using `cache-on-demand` for other tasks
+
+This module is an Express middleware wrapper for our [cache-on-demand](https://github.com/punkave/cache-on-demand) module. If you would like to do the same trick with code that isn't powered by Express, try using that module directly.
+
 ## About P'unk Avenue and Apostrophe
 
-`cache-on-demand` was created at [P'unk Avenue](http://punkave.com) for use in many projects built with Apostrophe, an open-source content management system built on node.js. If you like `cache-on-demand` you should definitely [check out apostrophenow.org](http://apostrophenow.org).
+`express-cache-on-demand` was created at [P'unk Avenue](http://punkave.com) for use in many projects built with Apostrophe, an open-source content management system built on node.js. If you like `cache-on-demand` you should definitely [check out apostrophenow.org](http://apostrophenow.org).
 
 ## Support
 
