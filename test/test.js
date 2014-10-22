@@ -1,3 +1,5 @@
+/*jshint node:true */
+
 var assert = require("assert");
 var request = require('request');
 var app = require('express')();
@@ -10,6 +12,9 @@ app.get('/welcome', expressCacheOnDemand, function(req, res) {
     workCount++;
     return res.send('URL was: ' + req.url + ', work count is: ' + workCount);
   }, 100);
+});
+app.get('/redirect', expressCacheOnDemand, function(req, res) {
+  return res.redirect('/welcome');
 });
 
 app.listen(9765);
@@ -41,6 +46,14 @@ describe('expressCacheOnDemand', function() {
       done();
     });
   });
+  it('handles redirects successfully', function(done) {
+    return request('http://localhost:9765/redirect', function(err, response, body) {
+      assert(!err);
+      assert(response.statusCode === 200);
+      assert(body === 'URL was: /welcome, work count is: 3');
+      done();
+    });
+  });
   it('replies to separate URLs with separate responses', function(done) {
     var i;
     var count = 0;
@@ -53,7 +66,7 @@ describe('expressCacheOnDemand', function() {
         assert(response.statusCode === 200);
         count++;
         if (count === 5) {
-          assert(workCount === 7);
+          assert(workCount === 8);
           done();
         }
       });

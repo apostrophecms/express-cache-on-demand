@@ -93,6 +93,10 @@ Feel free to open issues on [github](http://github.com/punkave/express-cache-on-
 
 ## Changelog
 
+### CHANGES IN 0.1.1
+
+Fixed a bug in `redirect` support, which now works properly.
+
 ### CHANGES IN 0.1.0
 
 Initial release. With shiny unit tests, of course.

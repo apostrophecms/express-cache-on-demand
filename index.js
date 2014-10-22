@@ -19,7 +19,7 @@ function expressCacheOnDemand(hasher) {
 
     patch(res, {
       redirect: function(url) {
-        _res.url = url;
+        _res.redirect = url;
         return finish();
       },
       send: function(data) {
@@ -71,7 +71,7 @@ function expressCacheOnDemand(hasher) {
       _.each(_res.headers || {}, function(val, key) {
         res.setHeader(key, val);
       });
-      if (_res._redirect) {
+      if (_res.redirect) {
         return res.redirect(_res.redirect);
       }
       if (_res.body) {
