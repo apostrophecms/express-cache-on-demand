@@ -63,7 +63,6 @@ function expressCacheOnDemand(hasher) {
 
   return function(req, res, next) {
     return codForMiddleware(req, res, next, function(_res) {
-
       // Replay the captured response
       if (_res.statusCode) {
         res.statusCode = _res.statusCode;
@@ -83,6 +82,8 @@ function expressCacheOnDemand(hasher) {
       // We know about ending a request with one of
       // the above three methods. Anything else doesn't
       // make sense with this middleware
+
+      console.log('Attempted Request URL: ' + req.url);
       throw 'cacheOnDemand.middleware does not know how to deliver this response, use the middleware only with routes that end with res.redirect, res.send or res.end';
     });
   };
