@@ -19,6 +19,15 @@ function expressCacheOnDemand(hasher) {
 
     patch(res, {
       redirect: function(url) {
+        var status = 302;
+        var url = url;
+
+        if (typeof arguments[0] === 'number') {
+          status = arguments[0];
+          url = arguments[1];
+        }
+
+        _res.redirectStatus = status;
         _res.redirect = url;
         return finish();
       },
@@ -71,7 +80,7 @@ function expressCacheOnDemand(hasher) {
         res.setHeader(key, val);
       });
       if (_res.redirect) {
-        return res.redirect(_res.redirect);
+        return res.redirect(_res.redirectStatus, _res.redirect);
       }
       if (_res.body) {
         return res.send(_res.body);
