@@ -47,7 +47,7 @@ You should *not* use this middleware for your entire site. In particular:
 * It does not work and is not suitable anyway for routes that `pipe` content into `res`
 * It shouldn't be registered globally before the `express.static` middleware
 
-There may be other methods of the Express `res` object that are not properly handled by this middleware yet.
+There may be other possible endings for an Express `res` object that are not properly handled by this middleware yet. Pull requests welcome.
 
 ## When we cache, when we don't
 
@@ -83,7 +83,7 @@ This module is an Express middleware wrapper for our [cache-on-demand](https://g
 
 ## About P'unk Avenue and Apostrophe
 
-`express-cache-on-demand` was created at [P'unk Avenue](http://punkave.com) for use in many projects built with Apostrophe, an open-source content management system built on node.js. If you like `cache-on-demand` you should definitely [check out apostrophenow.org](http://apostrophenow.org).
+`express-cache-on-demand` was created at [P'unk Avenue](http://punkave.com) for use in many projects built with Apostrophe, an open-source content management system built on node.js. If you like `cache-on-demand` you should definitely [check out apostrophecms.org](http://apostrophecms.org).
 
 ## Support
 
@@ -92,6 +92,12 @@ Feel free to open issues on [github](http://github.com/punkave/express-cache-on-
 <a href="http://punkave.com/"><img src="https://raw.githubusercontent.com/punkave/express-cache-on-demand/master/logos/logo-box-builtby.png" /></a>
 
 ## Changelog
+
+### CHANGES IN 1.0.0
+
+`redirect` now supports the optional status code argument properly. Thanks to Alexey Astafiev.
+
+This module has been in successful production use for many moons, so we're declaring it stable (1.0.0).
 
 ### CHANGES IN 0.1.1
 
