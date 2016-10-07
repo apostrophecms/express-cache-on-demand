@@ -58,12 +58,12 @@ function expressCacheOnDemand(hasher) {
     return next();
 
     function patch(obj, overrides) {
-      _.extend(originals, _.pick(obj, _.keys(overrides)));
-      _.extend(obj, overrides);
+      _.assign(originals, _.pick(obj, _.keys(overrides)));
+      _.assign(obj, overrides);
     }
 
     function restore(obj) {
-      _.extend(obj, originals);
+      _.assign(obj, originals);
     }
 
   }
