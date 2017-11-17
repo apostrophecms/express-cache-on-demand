@@ -39,6 +39,9 @@ function expressCacheOnDemand(hasher) {
         _res.raw = raw;
         return finish();
       },
+      getHeader: function(key) {
+          return _res.headers[key];
+      },
       setHeader: function(key, val) {
         _res.headers[key] = val;
       }
