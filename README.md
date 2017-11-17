@@ -93,6 +93,10 @@ Feel free to open issues on [github](http://github.com/punkave/express-cache-on-
 
 ## Changelog
 
+### CHANGES IN 1.0.2
+
+`res.getHeader` support. Thanks to Vadim Fedorov.
+
 ### CHANGES IN 1.0.1
 
 `cache-on-demand` is now at 1.0.0 also, plus the lodash dependency now points to a modern release. No functional changes.
