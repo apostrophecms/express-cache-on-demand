@@ -1,5 +1,6 @@
-var _ = require('lodash');
-var cacheOnDemand = require('cache-on-demand');
+const _ = require('lodash');
+const cacheOnDemand = require('cache-on-demand');
+
 module.exports = expressCacheOnDemand;
 
 function expressCacheOnDemand(hasher) {
@@ -10,17 +11,16 @@ function expressCacheOnDemand(hasher) {
     // directly, it builds a description of the response that
     // can be replayed by each pending res object
 
-    var _res = { headers: {} };
-    var originals = {};
+    const _res = { headers: {} };
+    const originals = {};
 
     // We're the first in, we get to do the real work.
     // Patch our response object to collect data for
     // replay into many response objects
 
     patch(res, {
-      redirect: function(url) {
-        var status = 302;
-        var url = url;
+      redirect (url) {
+        let status = 302;
 
         if (typeof arguments[0] === 'number') {
           status = arguments[0];
@@ -31,18 +31,18 @@ function expressCacheOnDemand(hasher) {
         _res.redirect = url;
         return finish();
       },
-      send: function(data) {
+      send (data) {
         _res.body = data;
         return finish();
       },
-      end: function(raw) {
+      end (raw) {
         _res.raw = raw;
         return finish();
       },
-      getHeader: function(key) {
-          return _res.headers[key];
+      getHeader (key) {
+        return _res.headers[key];
       },
-      setHeader: function(key, val) {
+      setHeader (key, val) {
         _res.headers[key] = val;
       }
     });
@@ -71,15 +71,15 @@ function expressCacheOnDemand(hasher) {
 
   }
 
-  var codForMiddleware = cacheOnDemand(worker, hasher);
+  const codForMiddleware = cacheOnDemand(worker, hasher);
 
   return function(req, res, next) {
-    return codForMiddleware(req, res, next, function(_res) {
+    return codForMiddleware(req, res, next, (_res) => {
       // Replay the captured response
       if (_res.statusCode) {
         res.statusCode = _res.statusCode;
       }
-      _.each(_res.headers || {}, function(val, key) {
+      _.each(_res.headers || {}, (val, key) => {
         res.setHeader(key, val);
       });
       if (_res.redirect) {
@@ -109,7 +109,6 @@ function expressHasher(req) {
     return false;
   }
   // Examine the session
-  var safe = true;
   _.each(req.session || {}, function(val, key) {
     if (key === 'cookie') {
       // The mere existence of a session cookie
@@ -121,7 +120,6 @@ function expressHasher(req) {
       // These two are often empty objects, which
       // are safe to cache
       if (!_.isEmpty(val)) {
-        safe = false;
         return false;
       }
     } else {
@@ -129,7 +127,6 @@ function expressHasher(req) {
       // be specific to this user, with a possible
       // impact on the response, and thus mean
       // this request must not be cached
-      safe = false;
       return false;
     }
   });
