@@ -1,85 +1,18 @@
-var _ = require('lodash');
-var cacheOnDemand = require('cache-on-demand');
+const _ = require('lodash');
+const cacheOnDemand = require('cache-on-demand');
+
 module.exports = expressCacheOnDemand;
 
-function expressCacheOnDemand(hasher) {
-  hasher = hasher || expressHasher;
+function expressCacheOnDemand(hasher = expressHasher) {
+  const codForMiddleware = cacheOnDemand(worker, hasher);
 
-  function worker(req, res, next, callback) {
-    // Patch the response object so that it doesn't respond
-    // directly, it builds a description of the response that
-    // can be replayed by each pending res object
-
-    var _res = { headers: {} };
-    var originals = {};
-
-    // We're the first in, we get to do the real work.
-    // Patch our response object to collect data for
-    // replay into many response objects
-
-    patch(res, {
-      redirect: function(url) {
-        var status = 302;
-        var url = url;
-
-        if (typeof arguments[0] === 'number') {
-          status = arguments[0];
-          url = arguments[1];
-        }
-
-        _res.redirectStatus = status;
-        _res.redirect = url;
-        return finish();
-      },
-      send: function(data) {
-        _res.body = data;
-        return finish();
-      },
-      end: function(raw) {
-        _res.raw = raw;
-        return finish();
-      },
-      getHeader: function(key) {
-          return _res.headers[key];
-      },
-      setHeader: function(key, val) {
-        _res.headers[key] = val;
-      }
-    });
-
-    function finish() {
-      // Folks tend to write to this one directly
-      _res.statusCode = res.statusCode;
-      // Undo the patching so we can replay into this
-      // response object, as well as others
-      restore(res);
-      // Great, we're done
-      return callback(_res);
-    }
-
-    // All set to continue the middleware chain
-    return next();
-
-    function patch(obj, overrides) {
-      _.assign(originals, _.pick(obj, _.keys(overrides)));
-      _.assign(obj, overrides);
-    }
-
-    function restore(obj) {
-      _.assign(obj, originals);
-    }
-
-  }
-
-  var codForMiddleware = cacheOnDemand(worker, hasher);
-
-  return function(req, res, next) {
-    return codForMiddleware(req, res, next, function(_res) {
+  return (req, res, next) => {
+    return codForMiddleware(req, res, next, (_res) => {
       // Replay the captured response
       if (_res.statusCode) {
         res.statusCode = _res.statusCode;
       }
-      _.each(_res.headers || {}, function(val, key) {
+      _.each(_res.headers || {}, (val, key) => {
         res.setHeader(key, val);
       });
       if (_res.redirect) {
@@ -99,6 +32,71 @@ function expressCacheOnDemand(hasher) {
       throw 'cacheOnDemand.middleware does not know how to deliver this response, use the middleware only with routes that end with res.redirect, res.send or res.end';
     });
   };
+
+}
+
+function worker(req, res, next, callback) {
+  // Patch the response object so that it doesn't respond
+  // directly, it builds a description of the response that
+  // can be replayed by each pending res object
+
+  const _res = { headers: {} };
+  const originals = {};
+
+  // We're the first in, we get to do the real work.
+  // Patch our response object to collect data for
+  // replay into many response objects
+
+  patch(res, {
+    redirect (url) {
+      let status = 302;
+
+      if (typeof arguments[0] === 'number') {
+        status = arguments[0];
+        url = arguments[1];
+      }
+
+      _res.redirectStatus = status;
+      _res.redirect = url;
+      return finish();
+    },
+    send (data) {
+      _res.body = data;
+      return finish();
+    },
+    end (raw) {
+      _res.raw = raw;
+      return finish();
+    },
+    getHeader (key) {
+      return _res.headers[key];
+    },
+    setHeader (key, val) {
+      _res.headers[key] = val;
+    }
+  });
+
+  function finish() {
+    // Folks tend to write to this one directly
+    _res.statusCode = res.statusCode;
+    // Undo the patching so we can replay into this
+    // response object, as well as others
+    restore(res);
+    // Great, we're done
+    return callback(_res);
+  }
+
+  // All set to continue the middleware chain
+  return next();
+
+  function patch(obj, overrides) {
+    _.assign(originals, _.pick(obj, _.keys(overrides)));
+    _.assign(obj, overrides);
+  }
+
+  function restore(obj) {
+    _.assign(obj, originals);
+  }
 }
 
 function expressHasher(req) {
@@ -109,7 +107,7 @@ function expressHasher(req) {
     return false;
   }
   // Examine the session
-  var safe = true;
+  let safe = true;
   _.each(req.session || {}, function(val, key) {
     if (key === 'cookie') {
       // The mere existence of a session cookie
@@ -133,5 +131,6 @@ function expressHasher(req) {
       return false;
     }
   });
-  return req.url;
+
+  return !safe ? safe : req.url;
 }
