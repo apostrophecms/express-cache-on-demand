@@ -107,6 +107,7 @@ function expressHasher(req) {
     return false;
   }
   // Examine the session
+  let safe = true;
   _.each(req.session || {}, function(val, key) {
     if (key === 'cookie') {
       // The mere existence of a session cookie
@@ -118,6 +119,7 @@ function expressHasher(req) {
       // These two are often empty objects, which
       // are safe to cache
       if (!_.isEmpty(val)) {
+        safe = false;
         return false;
       }
     } else {
@@ -125,8 +127,10 @@ function expressHasher(req) {
       // be specific to this user, with a possible
       // impact on the response, and thus mean
       // this request must not be cached
+      safe = false;
       return false;
     }
   });
-  return req.url;
+
+  return !safe ? safe : req.url;
 }
