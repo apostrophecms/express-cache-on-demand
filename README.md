@@ -93,6 +93,11 @@ Feel free to open issues on [github](http://github.com/punkave/express-cache-on-
 
 ## Changelog
 
+### CHANGES IN 1.0.3
+
+* The default hash function now correctly refuses to cache in the documented circumstances (i.e. logged-in users or a nontrivial `req.session` object). Previously a `return false` was missing, resulting in the possibility of a cached result going to a user with a different session.
+* `var` has been eliminated and the code has been lightly refactored without other changes to behavior.
+
 ### CHANGES IN 1.0.2
 
 `res.getHeader` support. Thanks to Vadim Fedorov.
