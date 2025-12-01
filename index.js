@@ -15,20 +15,19 @@ function expressCacheOnDemand(hasher = expressHasher) {
       _.each(_res.headers || {}, (val, key) => {
         res.setHeader(key, val);
       });
-      if (_res.redirect) {
+      if (_res.redirect != null) {
         return res.redirect(_res.redirectStatus, _res.redirect);
       }
-      if (_res.body) {
+      if (_res.body != null) {
         return res.send(_res.body);
       }
-      if (_res.raw) {
+      if (_res.raw != null) {
         return res.end(_res.raw);
       }
       // We know about ending a request with one of
       // the above three methods. Anything else doesn't
       // make sense with this middleware
 
-      console.log('Attempted Request URL: ' + req.url);
       throw 'cacheOnDemand.middleware does not know how to deliver this response, use the middleware only with routes that end with res.redirect, res.send or res.end';
     });
   };
@@ -131,6 +130,10 @@ function expressHasher(req) {
       return false;
     }
   });
-
-  return !safe ? safe : req.url;
+  if (!safe) {
+    return false;
+  }
+  // Create a key that distinguishes requests by hostname, and respect req.originalUrl
+  // if available (ApostropheCMS)
+  return `${req.hostname}:${req.originalUrl || req.url}`;
 }
