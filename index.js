@@ -24,11 +24,17 @@ function expressCacheOnDemand(hasher = expressHasher) {
       if (_res.raw != null) {
         return res.end(_res.raw);
       }
+
       // We know about ending a request with one of
       // the above three methods. Anything else doesn't
       // make sense with this middleware
 
-      throw 'cacheOnDemand.middleware does not know how to deliver this response, use the middleware only with routes that end with res.redirect, res.send or res.end';
+      console.error(
+        `cacheOnDemand.middleware does not know how to deliver a response for ${req.originalUrl || req.url},\n` +
+        'use the middleware only with routes that end with res.redirect, res.send or res.end'
+      );
+      // Report the bad news, but don't take the entire process down
+      return res.status(500).send('error');
     });
   };
 

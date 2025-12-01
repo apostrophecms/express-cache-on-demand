@@ -3,6 +3,8 @@
 ## 1.0.4 (2025-12-01)
 
 * Default hash function now distinguishes requests by hostname, and respects `req.originalUrl` in preference to `req.url` if available (ApostropheCMS).
+* Passing the empty string to `res.send()` no longer causes a failure.
+* If `express-cache-on-demand` does fail due to an unsupported way of ending a response, just issue a 500 error and log a useful message. Don't terminate the process.
 
 ## 1.0.3 (2022-02-18)
 
